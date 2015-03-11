@@ -148,7 +148,7 @@ describe Duck do
     it "doesn't change ranking" do
       # puts Duck.rank(:age).collect {|duck| "#{duck.name} #{duck.age}" }
       duck = Duck.rank(:age)[2]
-      ->{
+      lambda {
         duck.update_attribute :name, 'New Name'
       }.should_not change(duck.reload, :age)
       # puts Duck.rank(:age).collect {|duck| "#{duck.name} #{duck.age}" }
@@ -182,7 +182,7 @@ describe Duck do
     describe "in the middle" do
 
       before {
-        @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:wingy].id).collect {|duck| duck.id }
+        @ordered = Duck.rank(:row).where("id != ?", @ducks[:wingy].id).collect {|duck| duck.id }
         @ducks[:wingy].update_attribute :row_position, 2
       }
 
@@ -209,7 +209,7 @@ describe Duck do
     describe "at the start" do
 
       before {
-        @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:wingy].id).collect {|duck| duck.id }
+        @ordered = Duck.rank(:row).where("id != ?", @ducks[:wingy].id).collect {|duck| duck.id }
         @ducks[:wingy].update_attribute :row_position, 0
       }
 
@@ -242,7 +242,7 @@ describe Duck do
     describe "at the end" do
 
       before {
-        @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:wingy].id).collect {|duck| duck.id }
+        @ordered = Duck.rank(:row).where("id != ?", @ducks[:wingy].id).collect {|duck| duck.id }
         @ducks[:wingy].update_attribute :row_position, (@ducks.size - 1)
       }
 
@@ -283,7 +283,7 @@ describe Duck do
     describe "at the end with symbol" do
 
       before {
-        @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:wingy].id).collect {|duck| duck.id }
+        @ordered = Duck.rank(:row).where("id != ?", @ducks[:wingy].id).collect {|duck| duck.id }
         @ducks[:wingy].update_attribute :row_position, :last
       }
 
@@ -324,7 +324,7 @@ describe Duck do
     describe "at the end with string" do
 
       before {
-        @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:wingy].id).collect {|duck| duck.id }
+        @ordered = Duck.rank(:row).where("id != ?", @ducks[:wingy].id).collect {|duck| duck.id }
         @ducks[:wingy].update_attribute :row_position, 'last'
       }
 
@@ -367,7 +367,7 @@ describe Duck do
       context "when in the middle" do
 
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:wingy].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:wingy].id).collect { |duck| duck.id }
           @ducks[:wingy].update_attribute :row_position, :down
         }
 
@@ -392,9 +392,9 @@ describe Duck do
       end
 
       context "when last" do
-        
+
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:quacky].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:quacky].id).collect { |duck| duck.id }
           @ducks[:quacky].update_attribute :row_position, :down
         }
 
@@ -417,9 +417,9 @@ describe Duck do
       end
 
       context "when second last" do
-        
+
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:feathers].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:feathers].id).collect { |duck| duck.id }
           @ducks[:feathers].update_attribute :row_position, :down
         }
 
@@ -448,7 +448,7 @@ describe Duck do
       context "when in the middle" do
 
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:wingy].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:wingy].id).collect { |duck| duck.id }
           @ducks[:wingy].update_attribute :row_position, 'down'
         }
 
@@ -473,9 +473,9 @@ describe Duck do
       end
 
       context "when last" do
-        
+
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:quacky].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:quacky].id).collect { |duck| duck.id }
           @ducks[:quacky].update_attribute :row_position, 'down'
         }
 
@@ -498,9 +498,9 @@ describe Duck do
       end
 
       context "when second last" do
-        
+
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:feathers].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:feathers].id).collect { |duck| duck.id }
           @ducks[:feathers].update_attribute :row_position, 'down'
         }
 
@@ -529,7 +529,7 @@ describe Duck do
       context "when in the middle" do
 
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:wingy].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:wingy].id).collect { |duck| duck.id }
           @ducks[:wingy].update_attribute :row_position, :up
         }
 
@@ -554,9 +554,9 @@ describe Duck do
       end
 
       context "when first" do
-        
+
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:beaky].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:beaky].id).collect { |duck| duck.id }
           @ducks[:beaky].update_attribute :row_position, :up
         }
 
@@ -579,9 +579,9 @@ describe Duck do
       end
 
       context "when second" do
-        
+
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:waddly].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:waddly].id).collect { |duck| duck.id }
           @ducks[:waddly].update_attribute :row_position, :up
         }
 
@@ -610,7 +610,7 @@ describe Duck do
       context "when in the middle" do
 
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:wingy].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:wingy].id).collect { |duck| duck.id }
           @ducks[:wingy].update_attribute :row_position, 'up'
         }
 
@@ -635,9 +635,9 @@ describe Duck do
       end
 
       context "when first" do
-        
+
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:beaky].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:beaky].id).collect { |duck| duck.id }
           @ducks[:beaky].update_attribute :row_position, 'up'
         }
 
@@ -660,9 +660,9 @@ describe Duck do
       end
 
       context "when second" do
-        
+
         before {
-          @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_eq @ducks[:waddly].id).collect { |duck| duck.id }
+          @ordered = Duck.rank(:row).where("id != ?", @ducks[:waddly].id).collect { |duck| duck.id }
           @ducks[:waddly].update_attribute :row_position, 'up'
         }
 

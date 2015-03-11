@@ -72,7 +72,7 @@ describe Duck do
       before {
         @first = Duck.first
         @second = Duck.offset(1).first
-        @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_in([@first.id, @second.id])).collect {|d| d.id }
+        @ordered = Duck.rank(:row).where(%Q{"id" NOT IN (#{@first.id}, #{@second.id})}).collect {|d| d.id }
         @first.update_attribute :row, RankedModel::MAX_RANK_VALUE
         @second.update_attribute :row, RankedModel::MAX_RANK_VALUE
       }
@@ -90,12 +90,12 @@ describe Duck do
     describe "with max value and with_same pond" do
 
       before {
-        Duck.first(50).each_with_index do |d, index|
+        Duck.order("id ASC").limit(50).each_with_index do |d, index|
           d.update_attributes :age => index % 10, :pond => "Pond #{index / 10}"
         end
         @duck_11 = Duck.offset(10).first
         @duck_12 = Duck.offset(11).first
-        @ordered = Duck.where(:pond => 'Pond 1').rank(:age).where(Duck.arel_table[:id].not_in([@duck_11.id, @duck_12.id])).collect {|d| d.id }
+        @ordered = Duck.where(:pond => 'Pond 1').rank(:age).where(%Q{"id" NOT IN (#{@duck_11.id}, #{@duck_12.id})}).collect {|d| d.id }
         @duck_11.update_attribute :age, RankedModel::MAX_RANK_VALUE
         @duck_12.update_attribute :age, RankedModel::MAX_RANK_VALUE
       }
@@ -110,7 +110,7 @@ describe Duck do
         subject { Duck.first.age }
         it { should == 0}
       }
-      
+
     end
 
     describe "with min value" do
@@ -118,7 +118,7 @@ describe Duck do
       before {
         @first = Duck.first
         @second = Duck.offset(1).first
-        @ordered = Duck.rank(:row).where(Duck.arel_table[:id].not_in([@first.id, @second.id])).collect {|d| d.id }
+        @ordered = Duck.rank(:row).where(%Q{"id" NOT IN (#{@first.id}, #{@second.id})}).collect {|d| d.id }
         @first.update_attribute :row, RankedModel::MIN_RANK_VALUE
         @second.update_attribute :row, RankedModel::MIN_RANK_VALUE
       }
@@ -141,12 +141,12 @@ describe Duck do
         @third = Duck.offset(2).first
         @fourth = Duck.offset(4).first
         @lower = Duck.rank(:row).
-          where(Duck.arel_table[:id].not_in([@first.id, @second.id, @third.id, @fourth.id])).
-          where(Duck.arel_table[:row].lt(RankedModel::MAX_RANK_VALUE / 2)).
+          where(%Q{"id" NOT IN (#{@first.id}, #{@second.id}, #{@third.id}, #{@fourth.id})}).
+          where(%Q{"row" < ?}, RankedModel::MAX_RANK_VALUE / 2).
           collect {|d| d.id }
         @upper = Duck.rank(:row).
-          where(Duck.arel_table[:id].not_in([@first.id, @second.id, @third.id, @fourth.id])).
-          where(Duck.arel_table[:row].gteq(RankedModel::MAX_RANK_VALUE / 2)).
+          where(%Q{"id" NOT IN (#{@first.id}, #{@second.id}, #{@third.id}, #{@fourth.id})}).
+          where(%Q{"row" >= ?}, RankedModel::MAX_RANK_VALUE / 2).
           collect {|d| d.id }
         @first.update_attribute :row, RankedModel::MIN_RANK_VALUE
         @second.update_attribute :row, RankedModel::MAX_RANK_VALUE

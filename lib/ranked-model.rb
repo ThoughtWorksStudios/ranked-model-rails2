@@ -1,6 +1,9 @@
 require File.dirname(__FILE__)+'/ranked-model/ranker'
 require File.dirname(__FILE__)+'/ranked-model/railtie' if defined?(Rails::Railtie)
 
+require "active_record" unless defined?(ActiveRecord::Base)
+require "fake_arel"
+
 module RankedModel
 
   # Signed MEDIUMINT in MySQL
@@ -33,6 +36,10 @@ module RankedModel
   end
 
   module ClassMethods
+
+    def q(column_name)
+      connection.quote_column_name(column_name)
+    end
 
     def ranker name
       rankers.find do |ranker|

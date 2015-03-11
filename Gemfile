@@ -7,7 +7,7 @@ ar_version = ENV["ACTIVERECORD_VERSION"] || "default"
 
 ar_gem_version = case ar_version
 when "master"
-  gem "activerecord", {github: "rails/rails"}
+  gem "activerecord", {:github => "rails/rails"}
 when "default"
   # Allow the gemspec to specify
 else
@@ -20,13 +20,13 @@ platforms :rbx do
 end
 
 # SQLite
-gem "activerecord-jdbcsqlite3-adapter", ">= 1.3.0", platforms: :jruby
-gem "sqlite3", platforms: :ruby
+gem "activerecord-jdbcsqlite3-adapter", ">= 1.3.0", :platforms => :jruby
+gem "sqlite3", :platforms => :ruby
 
 # Postgres
-gem "activerecord-jdbcpostgresql-adapter", platforms: :jruby
-gem "pg", platforms: :ruby
+gem "activerecord-jdbcpostgresql-adapter", :platforms => :jruby
+gem "pg", :platforms => :ruby
 
 # MySQL
-gem "activerecord-jdbcmysql-adapter", platforms: :jruby
-gem "mysql", platforms: :ruby
+gem "activerecord-jdbcmysql-adapter", :platforms => :jruby
+gem "mysql", :platforms => :ruby
